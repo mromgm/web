@@ -1,0 +1,19 @@
+.carousel-item {
+    height: 70vh;
+    /* 50% de la altura de la ventana */
+}
+
+.img-fluid {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.bg-custom {
+    background-color: #1b2a4e;
+}
+
+.text-custom {
+    color: #1b2a4e;
+}
