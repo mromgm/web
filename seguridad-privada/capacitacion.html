@@ -46,7 +46,7 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="seguridad.html">Seguridad Privada</a></li>
                             <li><a class="dropdown-item" href="capacitacion.html">Capacitación</a></li>
-                            <li><a class="dropdown-item" href="otros.html">Otros</a></li>
+                            <li><a class="dropdown-item" href="mrpoligrafo.html">MR Polígrafo</a></li>
                         </ul>
                     </li>
                     <li class="nav-item fs-5 fw-semibold">
@@ -89,9 +89,60 @@
         </div>
     </section>
 
-    <!--========================================================== -->
+    <!-- Cursos -->
+    <section id="cursos" class="w-100">
+        <div class="row w-75 mx-auto">
+            <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-around">
+                <h3 class="mb-4">Programas o cursos del agente capacitador</h3>
+            </div>
+        </div>
+
+        <div class="row w-75 mx-auto">
+            <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-around">
+                <h5 class="mb-4">MEZA RAMOS ADALBERTO</h5>
+            </div>
+        </div>
+
+        <!-- Formulario de búsqueda -->
+        <div class="row w-75 mx-auto mb-3">
+            <div class="col-md-6">
+                <input type="text" id="programa" class="form-control" placeholder="Filtrar por programas o cursos..."
+                    onkeyup="filtrarYPaginar(1);">
+            </div>
+            <div class="col-md-6">
+                <input type="text" id="area" class="form-control" placeholder="Filtrar por área temática..."
+                    onkeyup="filtrarYPaginar(1);">
+            </div>
+            <!--
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100" onclick="filtrarYPaginar(1)">Buscar</button>
+            </div>
+            -->
+        </div>
+
+        <!-- Tabla de cursos -->
+        <div class="row  w-75 mx-auto mb-3">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="text-center pb-3" scope="col">No.</th>
+                            <th class="text-center" scope="col">Fecha de registro</th>
+                            <th class="text-center pb-3" scope="col">Programas o cursos</th>
+                            <th class="text-center pb-3" scope="col">Área temática</th>
+                            <th class="text-center" scope="col">Duración en horas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cursos-lista">
+                        <!-- Los datos se cargarán aquí mediante JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <nav id="paginacion-nav" aria-label="Page navigation"></nav>
+        </div>
+    </section>
+
     <!-- Contactos -->
-    <!--========================================================== -->
     <section id="contactos" class="border-bottom border-secondary border-2">
         <div id="bg-contactos">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
@@ -121,6 +172,64 @@
     </footer>
 
     <script src="js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        let cursos = [];
+        let itemsPorPagina = 10;
+
+        // Cargar los datos del archivo JSON
+        fetch('./json/cursos.json')
+            .then(response => response.json())
+            .then(data => {
+                cursos = data.cursos;
+                filtrarYPaginar(1); // Mostrar la primera página al cargar los datos
+            });
+
+        // Filtrar y paginar los datos
+        function filtrarYPaginar(pagina) {
+            const programa = document.getElementById('programa').value.toLowerCase();
+            const area = document.getElementById('area').value.toLowerCase();
+
+            // Filtrar los países según los valores de búsqueda
+            const cursosFiltrados = cursos.filter(curso =>
+                (curso === '' || curso.curso.toLowerCase().includes(programa)) &&
+                (area === '' || curso.area.toLowerCase().includes(area))
+            );
+
+            // Calcular el total de páginas y el índice de los elementos
+            const totalPaginas = Math.ceil(cursosFiltrados.length / itemsPorPagina);
+            const offset = (pagina - 1) * itemsPorPagina;
+            const cursosPagina = cursosFiltrados.slice(offset, offset + itemsPorPagina);
+
+            // Mostrar los países en la tabla
+            const cursosLista = document.getElementById('cursos-lista');
+            cursosLista.innerHTML = '';
+            cursosPagina.forEach(curso => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td>${curso.id}</td>
+            <td>${curso.fecha}</td>
+            <td>${curso.curso}</td>
+            <td>${curso.area}</td>
+            <td>${curso.duracion}</td>
+        `;
+                cursosLista.appendChild(row);
+            });
+
+            // Actualizar los controles de paginación
+            const paginacionNav = document.getElementById('paginacion-nav');
+            paginacionNav.innerHTML = '';
+            const paginationList = document.createElement('ul');
+            paginationList.className = 'pagination justify-content-center';
+            for (let i = 1; i <= totalPaginas; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.className = `page-item ${i === pagina ? 'active' : ''}`;
+                pageItem.innerHTML = `<button class="page-link" onclick="filtrarYPaginar(${i})">${i}</button>`;
+                paginationList.appendChild(pageItem);
+            }
+            paginacionNav.appendChild(paginationList);
+        }
+    </script>
 </body>
 
 </html>

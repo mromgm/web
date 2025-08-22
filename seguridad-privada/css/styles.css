@@ -10,10 +10,36 @@
     object-fit: cover;
 }
 
+
+.img-container {
+    width: 200px;
+    height: 200px;
+}
+
 .bg-custom {
     background-color: #1b2a4e;
 }
 
 .text-custom {
     color: #1b2a4e;
+}
+
+.contenedor-imagen {
+    position: relative;
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+
+.texto-superpuesto {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    color: #1b2a4e;
+    font-weight: bold;
+}
+
+.empty {
+    margin-top: 60px;
+    margin-bottom: 20px;
 }
